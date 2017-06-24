@@ -1,0 +1,6 @@
+[Desktop Entry]
+Comment=KOrganizer Alarm Daemon
+Exec=simplealarmdaemon
+Icon=SimpleAlarmDaemon
+Type=Application
+Name=Alarm Daemon

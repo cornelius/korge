@@ -1,0 +1,69 @@
+TEMPLATE	= lib
+CONFIG		= qt warn_on release staticlib
+HEADERS		= alarm.h \
+		  attendee.h \
+		  calendar.h \
+		  calendarlocal.h \
+		  calfilter.h \
+		  calformat.h \
+		  dummyscheduler.h \
+		  duration.h \
+		  event.h \
+		  exceptions.h \
+		  icalformat.h \
+		  icalformatimpl.h \
+		  imipscheduler.h \
+		  incidence.h \
+		  incidencebase.h \
+		  journal.h \
+		  person.h \
+		  recurrence.h \
+		  scheduler.h \
+		  todo.h \
+		  vcaldrag.h \
+		  vcalformat.h \
+                  freebusy.h \
+                  period.h \
+		  versit/port.h \
+		  versit/vcc.h \
+		  versit/vobject.h \
+                  calstorage.h \
+                  filestorage.h \
+                  compat.h \
+                  icaldrag.h \
+                  customproperties
+SOURCES		= alarm.cpp \
+		  attendee.cpp \
+		  calendar.cpp \
+		  calendarlocal.cpp \
+		  calfilter.cpp \
+		  calformat.cpp \
+		  dummyscheduler.cpp \
+		  duration.cpp \
+		  event.cpp \
+		  exceptions.cpp \
+		  icalformat.cpp \
+		  icalformatimpl.cpp \
+		  imipscheduler.cpp \
+		  incidence.cpp \
+		  incidencebase.cpp \
+		  journal.cpp \
+		  person.cpp \
+		  recurrence.cpp \
+		  scheduler.cpp \
+		  todo.cpp \
+		  vcaldrag.cpp \
+		  vcalformat.cpp \
+                  freebusy.cpp \
+                  period.cpp \
+		  versit/vcc.c \
+		  versit/vobject.c \
+                  filestorage.cpp \
+                  compat.cpp \
+                  icaldrag.cpp \
+                  customproperties.cpp
+INTERFACES	= 
+TARGET		= kcal
+INCLUDEPATH += ../microkde ../qtcompat versit
+INCLUDEPATH += ../libical/src/libical
+INCLUDEPATH += ../libical/src/libicalss

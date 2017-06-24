@@ -1,0 +1,24 @@
+TEMPLATE	= lib
+CONFIG		= qt warn_on release staticlib
+HEADERS		= categoryeditdialog.h \
+                  categoryeditdialog_base.h \
+		  categoryselectdialog.h \
+                  categoryselectdialog_base.h \
+		  kdateedit.h \
+		  kprefs.h \
+		  kprefsdialog.h \
+                  kpimprefs.h \
+                  kinputdialog.h
+SOURCES		= categoryeditdialog.cpp \
+		  categoryeditdialog_base.cpp \
+		  categoryselectdialog.cpp \
+		  categoryselectdialog_base.cpp \
+		  kdateedit.cpp \
+		  kprefs.cpp \
+		  kprefsdialog.cpp \
+                  kpimprefs.cpp \
+                  kinputdialog.cpp
+TARGET = kdepim
+INCLUDEPATH += ../microkde ../qtcompat
+INCLUDEPATH += . ..
+LIBS += ../microkde/libmicrokde.a

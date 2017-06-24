@@ -1,0 +1,11 @@
+Files: plugins/applets/libsimplealarmdaemon.*
+Priority: optional
+Section: qpe/applications
+Maintainer: Cornelius Schumacher <schumacher@kde.org>
+Architecture: arm
+Version: 1.0.8
+License: GPL
+Depends: korganizer
+Description: KOrganizer/E Alarm Daemon
+ The alarm daemon needed by KOrganizer/Embedded for
+ checking and showing alarms.

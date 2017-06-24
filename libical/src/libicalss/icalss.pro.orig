@@ -1,0 +1,34 @@
+TEMPLATE	= lib
+CONFIG		= warn_on release staticlib
+HEADERS		= icalcalendar.h \
+		  icalclassify.h \
+		  icalcstp.h \
+		  icalcstpclient.h \
+		  icalcstpserver.h \
+		  icaldirset.h \
+		  icaldirsetimpl.h \
+		  icalfileset.h \
+		  icalfilesetimpl.h \
+		  icalgauge.h \
+		  icalgaugeimpl.h \
+		  icalmessage.h \
+		  icalset.h \
+		  icalspanlist.h \
+		  icalssyacc.h \
+                  config.h
+SOURCES		= icalclassify.c \
+		  icalcstp.c \
+		  icalcstpclient.c \
+		  icalcstpserver.c \
+		  icaldirset.c \
+		  icalfileset.c \
+		  icalgauge.c \
+		  icalmessage.c \
+		  icalset.c \
+		  icalspanlist.c \
+		  icalsslexer.c \
+		  icalssyacc.c
+INTERFACES	= 
+INCLUDEPATH     += ../libical
+INCLUDEPATH     += .
+DEFINES += HAVE_CONFIG_H

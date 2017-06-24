@@ -1,0 +1,11 @@
+Files: bin/korganizer apps/Applications/korganizer.desktop pics/KOrganizer.png pics/korganizer/* lib/libqtcompat.* lib/libmicrokde.* lib/libkcal.* lib/libkdepim.*
+Priority: optional
+Section: qpe/applications
+Maintainer: Cornelius Schumacher <schumacher@kde.org>
+Architecture: arm
+Version: 1.0.8
+License: GPL
+Depends:
+Description: KOrganizer/E
+ The embedded version of KOrganizer, the
+ KDE calendar and scheduling program.

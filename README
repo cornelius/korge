@@ -1,0 +1,33 @@
+KOrganizer/Embedded
+===================
+
+This is the embedded version of KOrganizer. It includes a replacement for the
+KDE libraries called microkde, which provides the KDE specific functions
+KOrganizer needs, but does not add the overhead of the complete implementation.
+KOrganizer/E compiles with Qt/Embedded 2.3.2 and the corresponding QPE libs.
+
+KOrganizer/E is based on the unaltered original KOrganizer code from the KDE CVS
+HEAD branch. No changes are required. That means that all development done for
+the full KDE version will also be available in the embedded version.
+
+Some functionality of the full KDE version of Korganizer is not present in the
+embedded version, because microkde is not yet complete and some functions don't
+make much sense in the embedded version.
+
+KOrganizer/E is licenced under the GPL, the microkde library is licenced under
+the LGPL and the original KOrganizer code is licenced under GPL or LPGL.
+
+If you have questions or comments please contact Cornelius Schumacher
+<schumacher@kde.org>.
+
+
+History
+-------
+
+1.0 (April 2002):
+
+ - First stable release as final submission to the Trolltech Qtopia contest.
+
+0.8 (beta1) (January 2002):
+
+ - Initial release as entry to the Trolltech Qtopia contest.

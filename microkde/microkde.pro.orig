@@ -1,0 +1,61 @@
+TEMPLATE	= lib
+CONFIG		= qt warn_on release staticlib
+HEADERS		= kapplication.h \
+		  kconfig.h \
+		  kdatepicker.h \
+                  kdatetbl.h \
+		  kdebug.h \
+		  kdialog.h \
+		  kdialogbase.h \
+		  kemailsettings.h \
+		  kfiledialog.h \
+		  kglobal.h \
+		  kiconloader.h \
+		  kio/job.h \
+		  klineedit.h \
+		  klocale.h \
+		  kmessagebox.h \
+		  knotifyclient.h \
+		  kprinter.h \
+		  kprocess.h \
+		  krestrictedline.h \
+		  kseparator.h \
+		  ksimpleconfig.h \
+		  kstandarddirs.h \
+		  ktempfile.h \
+		  kunload.h \
+		  kurlrequester.h \
+                  kfontdialog.h \
+                  krun.h \
+                  knumvalidator.h \
+                  kstaticdeleter.h \
+                  klistview.h \
+                  kglobalsettings.h \
+                  kcolorbutton.h \
+                  kdirwatch.h \
+                  keditlistbox.h
+SOURCES		= kapplication.cpp \
+		  kconfig.cpp \
+		  kdatepicker.cpp \
+                  kdatetbl.cpp \
+		  kdialogbase.cpp \
+		  kemailsettings.cpp \
+		  kiconloader.cpp \
+		  klocale.cpp \
+		  kmessagebox.cpp \
+		  kprocess.cpp \
+		  kstandarddirs.cpp \
+		  ktempfile.cpp \
+		  kurlrequester.cpp \
+                  kcolordialog.cpp \
+                  krun.cpp \
+                  knumvalidator.cpp \
+                  kglobal.cpp \
+                  kglobalsettings.cpp \
+                  keditlistbox.cpp \
+                  kfontdialog.cpp
+INTERFACES	= 
+INCLUDEPATH     += $(QPEDIR)/include . ../qtcompat
+DEPENDPATH      += $(QPEDIR)/include
+LIBS            += -lqpe ../qtcompat/libqtcompat.a
+TARGET		= microkde

@@ -1,0 +1,282 @@
+#!/usr/bin/perl
+
+use Getopt::Long;
+use File::Basename;
+
+$result = GetOptions (
+  'setup' => \$setup,
+  'clean' => \$clean,
+  'check' => \$check,
+  'verbose' => \$verbose,
+  'help' => \$help
+);
+
+if ( $help || !$result ) { &usage(); }
+
+if ( !( $setup || $clean || $check ) ) { &usage(); }
+
+if ( @ARGV > 0 ) {
+  print "Unknown argument.\n";
+  usage();
+}
+
+$sourcepath = "../kdepim/";
+$buildpath = $sourcepath;
+
+do "setup.conf";
+
+print "SOURCE: $sourcepath\n";
+print "BUILD: $buildpath\n";
+
+if (!open FL,"filelist") {
+  print("Can't open 'filelist'\n");
+  exit 1;
+}
+
+my $prefix;
+
+while( <FL> ) {
+  chop;
+
+  if ( /^#/ || /^\s*$/ ) { next; }
+
+#    print "--LINE: $_\n";
+
+  my $cmd;
+  my $arg;
+  if ( /^(\w+):(.*)/ ) {
+    $cmd = $1;
+    $arg = $2;
+  } else {
+    $arg = $_;
+  }
+
+#  print "CMD: $cmd ARG: $arg\n";
+
+  my $source;
+  my $target;
+
+  if ( $cmd eq "MODULE" ) {
+    $module = $arg;
+    next;
+  }
+
+  if ( $cmd eq "DIR" ) {
+    $dir = $arg;
+    next;
+  }
+
+  if ( $cmd eq "BUILD" ) {
+    $source = $buildpath;
+  } else {
+    $source = $sourcepath;
+  }
+  $source .= $module . $dir . $arg;
+
+  $target = $dir . $arg;
+
+  $projects{ $dir } = 1;
+
+  $source =~ /([^\/]*)$/;
+  my $filename = $1;
+  if ( $filename !~ /\./ ) {
+    action_file( $source . ".h", $target . ".h" );
+    action_file( $source . ".cpp", $target . ".cpp" );
+    push @files, "$dir:$arg.h";
+    push @files, "$dir:$arg.cpp";
+  } else {
+    action_file( $source, $target );
+    push @files, "$dir:$arg";
+  }
+}
+
+close FL;
+
+if ( $setup ) {
+  foreach $project ( keys %projects ) {
+  #  print "PROJECT: $project\n";
+    my %projectFiles;
+    foreach ( @files ) {
+      /(.*):(.*)/;
+      if ( $1 eq $project ) {
+  #      print "  $2\n";
+        $projectFiles{ $2 } = 1;
+      }
+    }
+
+    if ( opendir DIR, "$project" ) {
+      my @pros = grep { /.*\.pro$/ } readdir ( DIR );
+      if ( @pros == 0 ) {
+        print STDERR "$project: No .pro file found.\n";
+      } elsif ( @pros > 1 ) {
+        print STDERR "$project: More than one .pro file found.\n";
+      } else {
+        my $pro = shift @pros;
+        print "PROJECT: $project: $pro\n";
+
+        my $out;
+        if ( open FILE, "$project/$pro" ) {
+          while ( <FILE> ) {
+  #          print "-->$_";
+            if ( /^HEADERS/ ) { $mode = "h"; }
+            elsif ( /^SOURCES/ ) { $mode = "s"; }
+            elsif ( /^INTERFACES/ ) { $mode = "i"; }
+            elsif ( /^\S/ ) { $mode = ""; }
+            else {
+              /^\s*(\S+)\s*/;
+              my $file = $1;
+              $projectFiles{ $file } = 1;
+  #            if ( $headers ) {
+  #              print "HHH $file HHH";
+  #            } elsif ( $sources ) {
+  #              print "SSS $file SSS";
+  #            }
+            }
+            if ( $mode eq "" ) {
+              $out .= $_;
+            }
+          }
+          close FILE;
+
+          my @projectFiles = sort keys %projectFiles;
+
+          my $interfacesOut = "INTERFACES = \\\n";
+          my $headersOut = "HEADERS = \\\n";        
+          my $sourcesOut = "SOURCES = \\\n";
+          foreach ( @projectFiles ) {
+            if ( /\.h$/ ) {
+              $headersOut .= " " . $_ . " \\\n";
+            } elsif( /\.ui$/ ) {
+              $interfacesOut .= " " . $_ . " \\\n";
+            } elsif( /\S/ ) {
+              $sourcesOut .= " " . $_ . " \\\n";
+            }
+          }
+
+          if ( !open OUT, ">$project/$pro.new" ) {
+            print STDERR "Unable to open project file for write.\n";
+          } else {
+            print OUT $out;
+            print OUT $interfacesOut . "\n";
+            print OUT $headersOut . "\n";
+            print OUT $sourcesOut . "\n";
+
+            close OUT;
+          }
+          
+          rename "$project/$pro", "$project/$pro.back";
+          rename "$project/$pro.new", "$project/$pro";
+        }        
+      }
+      closedir DIR;
+    }
+
+  #  foreach $file ( keys %projectFiles ) {
+  #    print "FILE: $file\n";
+  #  }
+  }
+}
+
+exit 0;
+
+sub action_file($$)
+{
+  my $source = shift;
+  my $target = shift;
+  
+#  print "ACTION: $source $target\n";
+  
+  if ( $clean ) {
+    clean_file( $source, $target );
+  } elsif ( $check ) {
+    check_file( $source, $target );
+  } elsif ( $setup ) {
+    setup_file( $source, $target );
+  } else {
+  }
+}
+
+sub check_file($$)
+{
+  my $source = shift;
+  my $target = shift;
+  
+  if ( !-e $source ) {
+    print "MISSING: $source\n";
+  } else {
+    if ( $verbose ) {
+      print "$source\n";
+    }
+  }
+}
+
+sub setup_file($$)
+{
+  my $source = shift;
+  my $target = shift;
+  
+  if ( ! -e $source ) {
+    print "Error: File '$source' does not exist.\n";
+  } else {
+    if ( -e $target && !-l $target ) {
+      print "WARNING: $target is a regular file.\n";
+    } else {
+      my $targetDir = dirname $target;
+      if ( !-e $targetDir ) {
+        print "Creating '$targetDir'\n";
+        system( "mkdir -p $targetDir" );
+      }
+      symlink $source, $target;
+      if ( $verbose ) {
+        print "$source -> $target\n";
+      }
+      if ( !open TARGET, "$target" ) {
+        print STDERR "Unable to open '$target'.\n";
+      } else {
+        while( <TARGET> ) {
+          if ( /#include\s*\"(.*)\.moc\"/ ) {
+            my $mocFile = $1;
+            if ( $verbose ) {
+              print "moc file: $mocFile\n";
+            }
+            system ("touch $targetDir/$mocFile.moc");
+          }
+        }
+        close TARGET;
+      }
+    }
+  }
+}
+
+sub clean_file($$)
+{
+  my $source = shift;
+  my $target = shift;
+
+  if ( ! -l $target ) {
+    print "WARNING: $target is no symbolic link.\n";
+  } else {
+    system "rm $target";
+  }
+}
+
+
+sub usage()
+{
+  print <<EOF;
+Usage: setup <--setup|--remove|--check> [--verbose]
+
+  If called without argument setup sets up the symbolic links to the original
+  KDE sources needed by the KOrganizer/Embedded build system. It reads a file
+  "filelist" to get the names of the files and a file "setup.conf" for getting
+  the paths to the source files from CVS and the build directory.
+
+  Options:
+    --setup   Set up symbolic links
+    --clean   Remove all symbolic links.
+    --check   Check filelist.
+    
+    --verbose Verbose output.
+EOF
+  exit 1;
+}
